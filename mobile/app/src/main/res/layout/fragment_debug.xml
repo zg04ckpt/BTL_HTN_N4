@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Debug robot"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="Đi thẳng (cm)" />
+
+    <EditText
+        android:id="@+id/edtGoDistance"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_input"
+        android:inputType="numberDecimal"
+        android:paddingHorizontal="10dp"
+        android:text="120" />
+
+    <Button
+        android:id="@+id/btnDebugGo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_button"
+        android:text="Gửi lệnh đi thẳng"
+        android:textAllCaps="false"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Quay góc alpha" />
+
+    <EditText
+        android:id="@+id/edtRotateAngle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_input"
+        android:inputType="numberDecimal|numberSigned"
+        android:paddingHorizontal="10dp"
+        android:text="90" />
+
+    <Button
+        android:id="@+id/btnDebugRotate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_button"
+        android:text="Gửi lệnh quay"
+        android:textAllCaps="false"
+        android:textColor="@color/white" />
+
+</LinearLayout>

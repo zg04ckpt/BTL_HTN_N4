@@ -7,6 +7,8 @@
 
 void setup() {
     Serial.begin(115200);
+    setupRuntimeConfig();
+    Serial.println(F("[MAIN] Đã nạp cấu hình runtime từ NVS (nếu đã lưu)."));
     Serial.println(F("[MAIN] Bắt đầu cấu hình"));
     setupHardware();
     setupSchedule();

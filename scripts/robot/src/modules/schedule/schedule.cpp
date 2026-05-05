@@ -1,9 +1,6 @@
 #include "schedule.h"
-#include "../../hardwares/hardware.h"
-#include "../../modules/moving/moving.h"
-#include "../../modules/remote/remote.h"
+#include "../zigzag_scan/zigzag_scan.h"
 #include <Arduino.h>
-#include "../../../config.h"
 
 // Biến toàn cục
 RobotStatus g_robotStatus;
@@ -16,7 +13,7 @@ void setupSchedule() {
     g_runMode = RunMode::ZIGZAC_BOX;
 }
 
-// Hàm chạy 
+// Hàm chạy
 void run() {
     switch (g_robotStatus) {
         case RobotStatus::SLEEPING:
@@ -31,7 +28,6 @@ void run() {
         case RobotStatus::ERROR:
             error();
             break;
-        
     }
 }
 
@@ -55,98 +51,6 @@ void error() {
     Serial.println(F("[SCHEDULE] Lỗi"));
     g_robotStatus = RobotStatus::ERROR;
 }
-
-
-
-
-
-#pragma region Chế độ 1: Quét zigzag hộp chữ nhật
-
-// Kiểm tra xem có gặp tường gần không để quay đầu
-bool checkWallDistanceToRotate() {
-    const RuntimeConfig& cfg = getRuntimeConfig();
-    static unsigned long lastCheckTime = 0;
-    static float distance = 0;
-
-    if (lastCheckTime == 0 || millis() - lastCheckTime > DIST_READ_INTERVAL_MS) {
-        lastCheckTime = millis();
-        distance = readDistanceCm();
-    }
-
-    Serial.print(F("[SCHEDULE] Khoảng cách đến tường: "));
-    Serial.println(distance);
-    if (distance >= 0.0f && distance < cfg.wallDistanceCm) {
-        return true;
-    }
-    return false;
-}
-
-// Xử lý quay đầu
-RotateStatus handleRotate(bool isLeft) {
-
-    RotateStatus result;
-    result = rotateByDeltaDegOneWheel(180.0f, isLeft);
-    return result;
-}
-
-// Quét zigzag hộp chữ nhật
-void runZigzacBox() {
-    Serial.println(F("[SCHEDULE] Chạy chế độ 1: Quét zigzag hộp chữ nhật"));
-
-    bool nextRotateLeft = false; // Biến kiểm soát hướng quay đầu
-    MoveStatus moveStatus = MoveStatus::FORWARD; // Biến kiểm soát hướng di chuyển
-
-    while (true) {
-        pollRemote();
-        if (!remoteShouldRunScheduler()) {
-            stop();
-            return;
-        }
-
-        switch (moveStatus) {
-            case MoveStatus::FORWARD:
-                // Nếu chưa gặp tường thì tiếp tục đi thẳng
-                if (!checkWallDistanceToRotate()) {
-                    goForwardWithNoPID();
-                    Serial.println(F("[SCHEDULE] Đi thẳng"));
-                    break;
-                }
-
-                // Nếu gặp tường thì quay đầu
-                moveStatus = MoveStatus::ROTATE;
-                break;
-            case MoveStatus::ROTATE:
-                Serial.println(F("[SCHEDULE] Chuẩn bị quay đầu"));
-                RotateStatus result = handleRotate(nextRotateLeft);
-
-                Serial.print(F("[SCHEDULE] Kết thúc quay đầu"));
-
-                // Xử lý kết quả quay đầu
-                if (result == RotateStatus::SUCCESS) {
-                    nextRotateLeft = !nextRotateLeft;
-                    moveStatus = MoveStatus::FORWARD;
-                } else if (result == RotateStatus::TIMEOUT) {
-                    Serial.println(F("[SCHEDULE] Quay đầu thất bại, không thực hiện được thao tác"));
-                    stop(); 
-                    return;
-                } else if (result == RotateStatus::WALL_DETECTED) {
-                    Serial.println(F("[SCHEDULE] Quay đầu thất bại, gặp tường khi quay đầu, tạm thời kết thúc"));
-                    stop();
-
-                    // TODO: Xử lý quay về nhà
-
-                    return;
-                }
-                break;
-
-        }
-        delay(LOOP_DELAY_MS);
-    }
-}
-
-
-
-#pragma endregion
 
 // Hàm xử lý trạng thái làm việc
 void work() {

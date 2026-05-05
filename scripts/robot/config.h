@@ -8,7 +8,7 @@ constexpr float RIGHT_GAIN = 1.0f; // Hệ số chỉnh PWM bánh phải khi đi
 constexpr int BASE_PWM = 85; // PWM cơ bản cho mỗi bánh khi đi thẳng.
 
 constexpr float WALL_DISTANCE_CM = 22.0f; // Gặp vật cản trước mặt ở khoảng này thì coi là "gặp tường"
-constexpr float END_DISTANCE_CM = 10.0f; // Gặp vật cản trước mặt ở khoảng này thì coi là hết khu vực lau => về home để ngủ"
+constexpr float END_DISTANCE_CM = 10.0f; // Ngưỡng khoảng cách kết thúc vùng làm việc / vật cản rất gần (cm)
 // constexpr float WALL_CLEAR_CM = 30.0f; // Lùi xa hơn ngưỡng này mới cho phép lại phát hiện tường
 // constexpr float HOME_BACKUP_MAX_CM = 20.0f; // Lùi tối đa khi gặp chướng ngại lúc quay (theo yêu cầu lịch trình)
 constexpr int MIN_START_PWM_L = 50; // PWM tối thiểu để bánh trái bắt đầu quay (bù ma sát bánh trái)

@@ -82,9 +82,19 @@ public class HomeFragment extends Fragment implements RobotSocketManager.Listene
                 return;
             }
 
+            boolean remoteOn = true;
+            if (root.has("remoteEnabled")) {
+                remoteOn = root.get("remoteEnabled").getAsBoolean();
+            }
+
             String nextStatus = root.has("status") ? root.get("status").getAsString() : "UNKNOWN";
+            if (!remoteOn) {
+                nextStatus = "OFF";
+            }
+
             String statusText = root.has("statusText") ? root.get("statusText").getAsString() : "Không có mô tả";
-            String nextPower = root.has("status") && "OFF".equals(root.get("status").getAsString()) ? "OFF" : "ON";
+            String nextPower = remoteOn ? "ON" : "OFF";
+
             updateStatusUi(nextStatus, statusText, nextPower);
         } catch (Exception ignored) {
         }

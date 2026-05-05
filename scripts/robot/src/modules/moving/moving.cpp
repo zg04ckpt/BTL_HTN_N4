@@ -89,10 +89,10 @@ void stop() {
     stopMotor();
 }
 
-// Kiểm tra xem có gặp tường gần khi quay đầu không
+// Ngưỡng khoảng cách kết thúc vùng (endDistanceCm, runtime): vật cản trong phạm vi này có thể coi là quá gần.
 bool checkWallDistanceWhenRotating() {
     const RuntimeConfig& cfg = getRuntimeConfig();
-    float distance = readDistanceCm();
+    const float distance = readDistanceCm();
     if (distance >= 0.0f && distance < cfg.endDistanceCm) {
         return true;
     }
@@ -100,6 +100,9 @@ bool checkWallDistanceWhenRotating() {
 }
 
 RotateStatus rotateByDeltaDegOneWheel(float deltaDeg, bool isLeftRotate) {
+
+    const RuntimeConfig& rc = getRuntimeConfig();
+    const int basePwm = constrain(rc.basePwm, 40, 255);
 
     updateYawDeg();
     const float startYaw = readYawDeg();
@@ -123,7 +126,6 @@ RotateStatus rotateByDeltaDegOneWheel(float deltaDeg, bool isLeftRotate) {
             return RotateStatus::TIMEOUT;
         }
 
-        // Kiểm tra xem có gặp tường gần khi quay đầu không
         // if (checkWallDistanceWhenRotating()) {
         //     stop();
         //     Serial.println(F("[MOVE] rotateByDeltaDeg gặp tường khi quay đầu"));
@@ -152,27 +154,27 @@ RotateStatus rotateByDeltaDegOneWheel(float deltaDeg, bool isLeftRotate) {
             return RotateStatus::SUCCESS;
         }
 
-        // Tính lực quay cho phù hợp
-        int pwm = 60;
-        if (fabsf(err) >= 60.0f) {
-            pwm = 180;
-        } else if (fabsf(err) >= 40.0f) {
-            pwm = 120;
-        } else if (fabsf(err) >= 30.0f) {
-            pwm = 90;
+        // Lực quay (PWM): bám basePwm đã lưu; với basePwm=85 tương đương bậc cũ 60/90/120/180.
+        const float lechGocTuyetDoi = fabsf(err);
+        int lucQuayPwm = basePwm;
+        if (lechGocTuyetDoi >= 60.0f) {
+            lucQuayPwm = min(255, basePwm + 95);
+        } else if (lechGocTuyetDoi >= 40.0f) {
+            lucQuayPwm = min(255, basePwm + 35);
+        } else if (lechGocTuyetDoi >= 30.0f) {
+            lucQuayPwm = min(255, basePwm + 5);
         }
-        // pwm = pwm * 0.7f;
 
         // Nếu là cần quay phải thì chỉ quay bánh trái, giữ bánh phải
         if (!isLeftRotate) {
 
             // Nếu err > 0 tức là chưa đạt đủ góc quay => bánh trái phải quay tiến
             if (err > 0.0f) {
-                setMotor(pwm, false, 0, true); // Bánh trái tiển, bánh phải giữ 0
+                setMotor(lucQuayPwm, false, 0, true); // Bánh trái tiển, bánh phải giữ 0
             
             // Nếu err < 0 tức là đã quay quá góc quay => bánh trái phải quay lùi
             } else {
-                setMotor(pwm, true, 0, true); // Bánh trái lùi, bánh phải giữ 0
+                setMotor(lucQuayPwm, true, 0, true); // Bánh trái lùi, bánh phải giữ 0
             }
         }
 
@@ -181,11 +183,11 @@ RotateStatus rotateByDeltaDegOneWheel(float deltaDeg, bool isLeftRotate) {
 
             // Nếu err > 0 tức là chưa đạt đủ góc quay => bánh phải phải quay tiến
             if (err > 0.0f) {
-                setMotor(0, true, pwm * 0.5f, true); // Bánh phải tiển, bánh trái giữ 0
+                setMotor(0, true, (int)(lucQuayPwm * 0.5f), true); // Bánh phải tiển, bánh trái giữ 0
             
             // Nếu err < 0 tức là đã quay quá góc quay => bánh phải phải quay lùi
             } else {
-                setMotor(0, true, pwm * 0.5f, false);  // Bánh phải lùi, bánh trái giữ 0
+                setMotor(0, true, (int)(lucQuayPwm * 0.5f), false);  // Bánh phải lùi, bánh trái giữ 0
             }
         }
 

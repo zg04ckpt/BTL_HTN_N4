@@ -89,7 +89,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="💡 Mẹo: Điều chỉnh M, N, K, L ở tab Cài đặt để tối ưu Zigzag navigation"
+        android:text="💡 Mẹo: chỉnh BASE_PWM, gain và khoảng cách ở tab Cài đặt."
         android:textSize="12sp"
         android:textStyle="italic" />
 

@@ -11,7 +11,7 @@ struct RuntimeConfig {
     int minStartPwmR;
 };
 
-// Đọc cấu hình đã lưu từ NVS; gọi trong setupRemote().
+// Đọc cấu hình đã lưu từ NVS — gọi một lần trong setup() (vd. robot.ino) trước khi chạy scheduler/moving.
 void setupRuntimeConfig();
 const RuntimeConfig& getRuntimeConfig();
 void setRuntimeConfig(const RuntimeConfig& cfg);

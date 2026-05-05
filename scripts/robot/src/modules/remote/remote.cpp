@@ -218,11 +218,37 @@ void sendError(AsyncWebSocketClient* client, const char* message) {
 }
 
 void sendStatusPayload(AsyncWebSocketClient* client, const char* type) {
-    StaticJsonDocument<256> doc;
+    StaticJsonDocument<512> doc;
     doc["type"] = type;
-    doc["status"] = robotStatusToCode(g_robotStatus);
-    doc["busy"] = (g_robotStatus == RobotStatus::WORKING || g_robotStatus == RobotStatus::GOING_HOME);
-    doc["remoteEnabled"] = gRemoteEnabled;
+
+    if (!gRemoteEnabled) {
+        doc["status"] = "OFF";
+        doc["statusText"] = "Tắt từ xa; bật \"Bật robot\" trên app để chạy lại.";
+        doc["busy"] = false;
+        doc["remoteEnabled"] = false;
+    } else {
+        doc["remoteEnabled"] = true;
+        doc["status"] = robotStatusToCode(g_robotStatus);
+        doc["busy"] = (g_robotStatus == RobotStatus::WORKING || g_robotStatus == RobotStatus::GOING_HOME);
+        switch (g_robotStatus) {
+            case RobotStatus::SLEEPING:
+                doc["statusText"] = "Đang chờ / ngủ — có thể bấm «Làm việc ngay».";
+                break;
+            case RobotStatus::WORKING:
+                doc["statusText"] = "Đang làm việc (quét zigzag).";
+                break;
+            case RobotStatus::GOING_HOME:
+                doc["statusText"] = "Đang về home.";
+                break;
+            case RobotStatus::ERROR:
+                doc["statusText"] = "Lỗi; kiểm tra robot.";
+                break;
+            default:
+                doc["statusText"] = "Không xác định.";
+                break;
+        }
+    }
+
     sendJson(client, doc);
 }
 
@@ -407,8 +433,6 @@ void onWebSocketEvent(AsyncWebSocket* server, AsyncWebSocketClient* client,
 
 // Bật AP Wi‑Fi, HTTP /health, POST /config/wifi và WebSocket /ws.
 void setupRemote() {
-    setupRuntimeConfig();
-
     WiFi.mode(WIFI_AP_STA);
     WiFi.softAP(kApSsid, kApPass);
     sSoftApUp = true;

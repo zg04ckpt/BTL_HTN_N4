@@ -13,11 +13,6 @@ enum class RobotStatus : uint8_t {
     // STOPPED, // Robot đang dừng
 };
 
-enum class MoveStatus : uint8_t {
-    FORWARD, // Robot đang đi thẳng
-    ROTATE, // Robot đang quay đầu
-};
-
 // Biến toàn cục
 extern RobotStatus g_robotStatus;
 extern RunMode g_runMode;

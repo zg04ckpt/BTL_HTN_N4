@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
@@ -14,6 +15,7 @@ import com.n7.quanlyrobotquetnha.R;
 import com.n7.quanlyrobotquetnha.models.WifiConfig;
 import com.n7.quanlyrobotquetnha.utils.HttpClient;
 import com.n7.quanlyrobotquetnha.utils.PreferenceManager;
+import com.n7.quanlyrobotquetnha.utils.RobotSocketManager;
 import com.n7.quanlyrobotquetnha.utils.WifiScanner;
 
 import java.io.IOException;
@@ -33,6 +35,7 @@ public class ConfigActivity extends AppCompatActivity {
     EditText edtSSID;
     EditText edtPass;
     Button btnSaveConfig;
+    Button btnClearWifiCache;
     ImageView ivBack;
 
     private String savedHost = "";
@@ -62,6 +65,7 @@ public class ConfigActivity extends AppCompatActivity {
         edtSSID = findViewById(R.id.edtSSID);
         edtPass = findViewById(R.id.edtPass);
         btnSaveConfig = findViewById(R.id.btnSaveConfig);
+        btnClearWifiCache = findViewById(R.id.btnClearWifiCache);
         ivBack = findViewById(R.id.ivBack);
 
         setListeners();
@@ -69,6 +73,7 @@ public class ConfigActivity extends AppCompatActivity {
 
     private void setListeners() {
         ivBack.setOnClickListener(v -> finish());
+        btnClearWifiCache.setOnClickListener(v -> confirmClearLocalWifiCache());
         btnSaveConfig.setOnClickListener(v -> {
             String ssid = edtSSID.getText().toString();
             String pass = edtPass.getText().toString();
@@ -90,6 +95,26 @@ public class ConfigActivity extends AppCompatActivity {
 
             postWifiConfig(jsonConfig, ssid);
         });
+    }
+
+    private void confirmClearLocalWifiCache() {
+        new AlertDialog.Builder(this)
+                .setTitle("Xóa bộ nhớ trên điện thoại")
+                .setMessage("Xóa địa chỉ robot đã lưu và tên Wi‑Fi đã cấu hình gần nhất (gợi ý kết nối). Cấu hình Wi‑Fi trên robot không bị đổi.")
+                .setNegativeButton("Hủy", null)
+                .setPositiveButton("Xóa", (dialog, which) -> clearLocalWifiCache())
+                .show();
+    }
+
+    private void clearLocalWifiCache() {
+        PreferenceManager.getInstance(this).clearRobotWifiCache();
+        savedHost = "";
+        resolvedRobotHost = resolveRobotHost();
+        if (!resolvedRobotHost.isEmpty()) {
+            HttpClient.setRobotHost(resolvedRobotHost);
+        }
+        RobotSocketManager.getInstance().disconnect("clear_wifi_cache");
+        Toast.makeText(this, "Đã xóa bộ nhớ kết nối trên điện thoại.", Toast.LENGTH_SHORT).show();
     }
 
     private String resolveRobotHost() {

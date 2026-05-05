@@ -59,4 +59,14 @@ public class PreferenceManager {
     public void clear() {
         editor.clear().apply();
     }
+
+    /**
+     * Xóa trên điện thoại: địa chỉ robot đã lưu và SSID Wi‑Fi đã cấu hình gần nhất (gợi ý kết nối).
+     * Không xóa mật khẩu Wi‑Fi đã gửi cho robot (robot lưu trong NVS riêng).
+     */
+    public void clearRobotWifiCache() {
+        editor.remove(KEY_ROBOT_IP);
+        editor.remove(KEY_LAST_CONFIG_WIFI_SSID);
+        editor.apply();
+    }
 }

@@ -3,12 +3,14 @@
 #include "src/modules/moving/moving.h"
 #include "src/hardwares/mpu6050.h"
 #include "src/modules/schedule/schedule.h"
+#include "src/modules/remote/remote.h"
 
 void setup() {
     Serial.begin(115200);
     Serial.println(F("[MAIN] Bắt đầu cấu hình"));
     setupHardware();
     setupSchedule();
+    setupRemote();
     Serial.println(F("[MAIN] Cấu hình hoàn tất"));
 }
 
@@ -62,6 +64,8 @@ void debugMPU6050() {
   #pragma endregion
 
 void loop() {
+    pollRemote();
+
     // updateYawDeg();
     // debugMPU6050();
     // goForwardWithNoPID();
@@ -77,7 +81,9 @@ void loop() {
     // rotateByDeltaDegOneWheel(90.0f, false);
     // delay(1400);
 
-    run();
+    if (remoteShouldRunScheduler()) {
+        run();
+    }
 
     delay(LOOP_DELAY_MS);
 }

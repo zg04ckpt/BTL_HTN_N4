@@ -2,6 +2,7 @@
 #include "../../../config.h"
 #include "../../hardwares/hardware.h"
 #include "../../hardwares/encoder.h"
+#include "../remote/remote.h"
 
 // Biến
 // PID cân bằng encoder
@@ -73,8 +74,15 @@ void setupMoving() {
 // }
 
 void goForwardWithNoPID(bool isBackward) {
+    const RuntimeConfig& cfg = getRuntimeConfig();
     const bool forward = !isBackward;
-    setMotor(BASE_PWM * LEFT_GAIN, forward, BASE_PWM * RIGHT_GAIN, forward);
+    int pwmL = (int)(cfg.basePwm * cfg.leftGain);
+    int pwmR = (int)(cfg.basePwm * cfg.rightGain);
+    pwmL = constrain(pwmL, 0, 255);
+    pwmR = constrain(pwmR, 0, 255);
+    if (pwmL > 0 && pwmL < cfg.minStartPwmL) pwmL = cfg.minStartPwmL;
+    if (pwmR > 0 && pwmR < cfg.minStartPwmR) pwmR = cfg.minStartPwmR;
+    setMotor(pwmL, forward, pwmR, forward);
 }
 
 void stop() {
@@ -83,8 +91,9 @@ void stop() {
 
 // Kiểm tra xem có gặp tường gần khi quay đầu không
 bool checkWallDistanceWhenRotating() {
+    const RuntimeConfig& cfg = getRuntimeConfig();
     float distance = readDistanceCm();
-    if (distance < END_DISTANCE_CM) {
+    if (distance >= 0.0f && distance < cfg.endDistanceCm) {
         return true;
     }
     return false;
@@ -105,6 +114,8 @@ RotateStatus rotateByDeltaDegOneWheel(float deltaDeg, bool isLeftRotate) {
     unsigned long lastLogMs = startTimeMs;
 
     while (true) {
+        pollRemote();
+
         // Hết time quay
         if (millis() - startTimeMs > ERROR_TIME_OUT) {
             stop();

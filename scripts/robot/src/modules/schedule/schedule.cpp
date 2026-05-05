@@ -1,6 +1,7 @@
 #include "schedule.h"
 #include "../../hardwares/hardware.h"
 #include "../../modules/moving/moving.h"
+#include "../../modules/remote/remote.h"
 #include <Arduino.h>
 #include "../../../config.h"
 
@@ -39,7 +40,7 @@ void sleep() {
     Serial.println(F("[SCHEDULE] Đang ngủ"));
     g_robotStatus = RobotStatus::SLEEPING;
 
-    // temp
+    // Tạm thời: bỏ chờ ngủ, chuyển thẳng sang làm việc (thử nghiệm).
     g_robotStatus = RobotStatus::WORKING;
 }
 
@@ -59,10 +60,11 @@ void error() {
 
 
 
-#pragma region Chế độ 1: Quét zigzac hộp chữ nhật
+#pragma region Chế độ 1: Quét zigzag hộp chữ nhật
 
 // Kiểm tra xem có gặp tường gần không để quay đầu
 bool checkWallDistanceToRotate() {
+    const RuntimeConfig& cfg = getRuntimeConfig();
     static unsigned long lastCheckTime = 0;
     static float distance = 0;
 
@@ -73,7 +75,7 @@ bool checkWallDistanceToRotate() {
 
     Serial.print(F("[SCHEDULE] Khoảng cách đến tường: "));
     Serial.println(distance);
-    if (distance < WALL_DISTANCE_CM) {
+    if (distance >= 0.0f && distance < cfg.wallDistanceCm) {
         return true;
     }
     return false;
@@ -87,14 +89,20 @@ RotateStatus handleRotate(bool isLeft) {
     return result;
 }
 
-// Quét zigzac hộp chữ nhật
+// Quét zigzag hộp chữ nhật
 void runZigzacBox() {
-    Serial.println(F("[SCHEDULE] Chạy chế độ 1: Quét zigzac hộp chữ nhật"));
+    Serial.println(F("[SCHEDULE] Chạy chế độ 1: Quét zigzag hộp chữ nhật"));
 
     bool nextRotateLeft = false; // Biến kiểm soát hướng quay đầu
     MoveStatus moveStatus = MoveStatus::FORWARD; // Biến kiểm soát hướng di chuyển
 
     while (true) {
+        pollRemote();
+        if (!remoteShouldRunScheduler()) {
+            stop();
+            return;
+        }
+
         switch (moveStatus) {
             case MoveStatus::FORWARD:
                 // Nếu chưa gặp tường thì tiếp tục đi thẳng

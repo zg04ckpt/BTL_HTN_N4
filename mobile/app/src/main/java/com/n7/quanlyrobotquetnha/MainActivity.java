@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnAction;
     private EditText edtRobotHost;
     private Button btnConnectByHost;
+    private Button btnClearWifiCache;
     private SwipeRefreshLayout swipeRefreshMain;
     private RobotUdpDiscovery robotUdpDiscovery;
     private String discoveredRobotIp = "";
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         btnAction = findViewById(R.id.btnAction);
         edtRobotHost = findViewById(R.id.edtRobotHost);
         btnConnectByHost = findViewById(R.id.btnConnectByHost);
+        btnClearWifiCache = findViewById(R.id.btnClearWifiCache);
         swipeRefreshMain = findViewById(R.id.swipeRefreshMain);
 
         setupInitialHost();
@@ -95,7 +98,33 @@ public class MainActivity extends AppCompatActivity {
     private void setupListeners() {
         btnAction.setOnClickListener(v -> handlePrimaryAction());
         btnConnectByHost.setOnClickListener(v -> connectByHost());
+        btnClearWifiCache.setOnClickListener(v -> confirmClearLocalWifiCache());
         swipeRefreshMain.setOnRefreshListener(() -> runStartupChecks(true));
+    }
+
+    private void confirmClearLocalWifiCache() {
+        new AlertDialog.Builder(this)
+                .setTitle("Xóa bộ nhớ trên điện thoại")
+                .setMessage("Xóa địa chỉ robot đã lưu và tên Wi‑Fi đã cấu hình gần nhất. Cấu hình Wi‑Fi trên robot không bị đổi.")
+                .setNegativeButton("Hủy", null)
+                .setPositiveButton("Xóa", (dialog, which) -> clearLocalWifiCache())
+                .show();
+    }
+
+    private void clearLocalWifiCache() {
+        PreferenceManager.getInstance(this).clearRobotWifiCache();
+        RobotSocketManager.getInstance().disconnect("clear_wifi_cache");
+
+        String gw = WifiScanner.getWifiGatewayHost(this);
+        String nextHost = !gw.isEmpty() ? gw : ROBOT_AP_DEFAULT_HOST;
+        if (HttpClient.setRobotHost(nextHost)) {
+            edtRobotHost.setText(nextHost);
+        } else {
+            edtRobotHost.setText("");
+        }
+
+        tvStatus.setText("Đã xóa bộ nhớ kết nối. Nhập IP robot hoặc quét lại.");
+        Toast.makeText(this, "Đã xóa bộ nhớ kết nối trên điện thoại.", Toast.LENGTH_SHORT).show();
     }
 
     private void runStartupChecks(boolean forceRestart) {

@@ -67,6 +67,23 @@
                 android:layout_height="40dp"
                 android:paddingHorizontal="8dp"
                 android:background="@drawable/bg_input"
+                android:layout_marginBottom="12dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Xóa dữ liệu đã lưu trên điện thoại (IP robot, gợi ý Wi‑Fi) khi muốn kết nối lại từ đầu. Không xóa cấu hình Wi‑Fi trên robot."
+                android:textSize="12sp"
+                android:layout_marginBottom="8dp"/>
+
+            <Button
+                android:id="@+id/btnClearWifiCache"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Xóa bộ nhớ Wi‑Fi / địa chỉ robot"
+                android:textAllCaps="false"
+                android:background="@drawable/bg_button"
+                android:textColor="@color/white"
                 android:layout_marginBottom="20dp"/>
 
         </LinearLayout>

@@ -2,11 +2,11 @@
 #include <stdint.h>
 
 enum class RunMode : uint8_t {
-    ZIGZAC_BOX, // Quét zigzac hộp chữ nhật
+    ZIGZAC_BOX, // Quét zigzag trong hộp chữ nhật
 };
 
 enum class RobotStatus : uint8_t {
-    SLEEPING, // Robot đang ngủ t phút trước khi bắt đầu chạy 
+    SLEEPING, // Robot đang chờ / ngủ trước khi bắt đầu chạy
     WORKING, // Robot đang chạy
     GOING_HOME, // Robot đang đi về nhà
     ERROR, // Robot đang bị lỗi
@@ -14,7 +14,7 @@ enum class RobotStatus : uint8_t {
 };
 
 enum class MoveStatus : uint8_t {
-    FORWARD, // Robot đang đi thẳngược
+    FORWARD, // Robot đang đi thẳng
     ROTATE, // Robot đang quay đầu
 };
 
@@ -28,7 +28,7 @@ void setupSchedule();
 // Chạy
 void run();
 
-// Cách hàm điều khiển
+// Các hàm điều khiển
 void work();
 void sleep();
 void goHome();

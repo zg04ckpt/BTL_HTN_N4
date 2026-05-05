@@ -12,44 +12,25 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cấu hình robot"
+            android:text="Tham số vận hành"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="SSID" />
-
-        <EditText
-            android:id="@+id/edtCfgSsid"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_input"
-            android:paddingHorizontal="10dp" />
+            android:layout_marginTop="8dp"
+            android:text="Gửi qua WebSocket (khớp firmware hiện tại). Cấu hình Wi‑Fi nhà dùng màn kết nối / Cấu hình Wi‑Fi."
+            android:textSize="12sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Pass" />
+            android:layout_marginTop="14dp"
+            android:text="BASE_PWM (0–255)" />
 
         <EditText
-            android:id="@+id/edtCfgPass"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_input"
-            android:paddingHorizontal="10dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Tốc độ đi (0-255)" />
-
-        <EditText
-            android:id="@+id/edtCfgGoSpeed"
+            android:id="@+id/edtCfgBasePwm"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/bg_input"
@@ -60,75 +41,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Tốc độ quay (0-255)" />
+            android:text="LEFT_GAIN" />
 
         <EditText
-            android:id="@+id/edtCfgTurnSpeed"
+            android:id="@+id/edtCfgLeftGain"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/bg_input"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:paddingHorizontal="10dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Bán kính bánh xe (cm)" />
+            android:text="RIGHT_GAIN" />
 
         <EditText
-            android:id="@+id/edtCfgWheelRadius"
+            android:id="@+id/edtCfgRightGain"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/bg_input"
             android:inputType="numberDecimal"
-            android:paddingHorizontal="10dp"
-            android:text="3.4" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Ngưỡng quay ngược khi vượt góc (độ)" />
-
-        <EditText
-            android:id="@+id/edtCfgRotateReverseThreshold"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_input"
-            android:inputType="numberDecimal"
-            android:paddingHorizontal="10dp"
-            android:text="8" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Sai số góc cho phép (độ)" />
-
-        <EditText
-            android:id="@+id/edtCfgRotateTolerance"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_input"
-            android:inputType="numberDecimal"
-            android:paddingHorizontal="10dp"
-            android:text="2" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Số lần chỉnh góc tối đa (M)" />
-
-        <EditText
-            android:id="@+id/edtCfgRotateMaxCorrections"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_input"
-            android:inputType="number"
-            android:paddingHorizontal="10dp"
-            android:text="2" />
+            android:paddingHorizontal="10dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -148,10 +83,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Thời gian ngủ (phút)" />
+            android:text="Khoảng cách kết thúc vùng làm việc (cm)" />
 
         <EditText
-            android:id="@+id/edtCfgSleepMinutes"
+            android:id="@+id/edtCfgEndDistance"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_input"
+            android:inputType="numberDecimal"
+            android:paddingHorizontal="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="MIN_START_PWM_L" />
+
+        <EditText
+            android:id="@+id/edtCfgMinStartPwmL"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/bg_input"
@@ -161,168 +110,16 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:text="Chế độ xung động lực" />
-
-        <Switch
-            android:id="@+id/swPulseEnabled"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="Bật chế độ xung" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Tần số xung (Hz)" />
-
-        <EditText
-            android:id="@+id/edtCfgPulseFreq"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_input"
-            android:inputType="numberDecimal"
-            android:paddingHorizontal="10dp"
-            android:text="12.5" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Chu kỳ bật (duty) (%)" />
-
-        <EditText
-            android:id="@+id/edtCfgPulseDuty"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_input"
-            android:inputType="numberDecimal"
-            android:paddingHorizontal="10dp"
-            android:text="50" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Lực xung (%)" />
-
-        <EditText
-            android:id="@+id/edtCfgPulsePower"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_input"
-            android:inputType="numberDecimal"
-            android:paddingHorizontal="10dp"
-            android:text="100" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Cấu hình Zigzag Navigation"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="Robot sẽ di chuyển theo pattern zigzag để lau phủ toàn bộ khu vực"
-            android:textSize="12sp"
-            android:textStyle="italic" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="M - Phần bù góc (độ)" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="Góc bù thêm khi điều chỉnh hướng để bù hao hụt"
-            android:textSize="11sp"
-            android:textColor="#666666" />
+            android:text="MIN_START_PWM_R" />
 
         <EditText
-            android:id="@+id/edtCfgZigzagAngleOffsetM"
+            android:id="@+id/edtCfgMinStartPwmR"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/bg_input"
-            android:inputType="numberDecimal"
-            android:paddingHorizontal="10dp"
-            android:text="28" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="N - Ngưỡng lệch góc (độ)" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="Độ lệch tối đa cho phép trước khi tự động điều chỉnh"
-            android:textSize="11sp"
-            android:textColor="#666666" />
-
-        <EditText
-            android:id="@+id/edtCfgZigzagDeviationThresholdN"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_input"
-            android:inputType="numberDecimal"
-            android:paddingHorizontal="10dp"
-            android:text="5" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="K - Quãng đường thẳng tối đa (cm)" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="Độ dài mỗi hàng zigzag trước khi chuyển hàng"
-            android:textSize="11sp"
-            android:textColor="#666666" />
-
-        <EditText
-            android:id="@+id/edtCfgZigzagStraightDistanceK"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_input"
-            android:inputType="numberDecimal"
-            android:paddingHorizontal="10dp"
-            android:text="100" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="L - Độ dịch ngang (cm)" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="Khoảng cách dịch sang khi chuyển hàng zigzag"
-            android:textSize="11sp"
-            android:textColor="#666666" />
-
-        <EditText
-            android:id="@+id/edtCfgZigzagOffsetDistanceL"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_input"
-            android:inputType="numberDecimal"
-            android:paddingHorizontal="10dp"
-            android:text="30" />
+            android:inputType="number"
+            android:paddingHorizontal="10dp" />
 
         <Button
             android:id="@+id/btnUpdateConfig"

@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,24 +20,13 @@ import com.n7.quanlyrobotquetnha.utils.RobotSocketManager;
 
 public class SettingsFragment extends Fragment implements RobotSocketManager.Listener {
 
-    private EditText edtSsid;
-    private EditText edtPass;
-    private EditText edtGoSpeed;
-    private EditText edtTurnSpeed;
-    private EditText edtWheelRadius;
-    private EditText edtRotateReverseThreshold;
-    private EditText edtRotateTolerance;
-    private EditText edtRotateMaxCorrections;
+    private EditText edtBasePwm;
+    private EditText edtLeftGain;
+    private EditText edtRightGain;
     private EditText edtWallDistance;
-    private EditText edtSleepMinutes;
-    private Switch swPulseEnabled;
-    private EditText edtPulseFreq;
-    private EditText edtPulseDuty;
-    private EditText edtPulsePower;
-    private EditText edtZigzagAngleOffsetM;
-    private EditText edtZigzagDeviationThresholdN;
-    private EditText edtZigzagStraightDistanceK;
-    private EditText edtZigzagOffsetDistanceL;
+    private EditText edtEndDistance;
+    private EditText edtMinStartPwmL;
+    private EditText edtMinStartPwmR;
     private TextView tvConfigNote;
     private Button btnUpdateConfig;
 
@@ -47,24 +35,13 @@ public class SettingsFragment extends Fragment implements RobotSocketManager.Lis
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_config, container, false);
 
-        edtSsid = view.findViewById(R.id.edtCfgSsid);
-        edtPass = view.findViewById(R.id.edtCfgPass);
-        edtGoSpeed = view.findViewById(R.id.edtCfgGoSpeed);
-        edtTurnSpeed = view.findViewById(R.id.edtCfgTurnSpeed);
-        edtWheelRadius = view.findViewById(R.id.edtCfgWheelRadius);
-        edtRotateReverseThreshold = view.findViewById(R.id.edtCfgRotateReverseThreshold);
-        edtRotateTolerance = view.findViewById(R.id.edtCfgRotateTolerance);
-        edtRotateMaxCorrections = view.findViewById(R.id.edtCfgRotateMaxCorrections);
+        edtBasePwm = view.findViewById(R.id.edtCfgBasePwm);
+        edtLeftGain = view.findViewById(R.id.edtCfgLeftGain);
+        edtRightGain = view.findViewById(R.id.edtCfgRightGain);
         edtWallDistance = view.findViewById(R.id.edtCfgWallDistance);
-        edtSleepMinutes = view.findViewById(R.id.edtCfgSleepMinutes);
-        swPulseEnabled = view.findViewById(R.id.swPulseEnabled);
-        edtPulseFreq = view.findViewById(R.id.edtCfgPulseFreq);
-        edtPulseDuty = view.findViewById(R.id.edtCfgPulseDuty);
-        edtPulsePower = view.findViewById(R.id.edtCfgPulsePower);
-        edtZigzagAngleOffsetM = view.findViewById(R.id.edtCfgZigzagAngleOffsetM);
-        edtZigzagDeviationThresholdN = view.findViewById(R.id.edtCfgZigzagDeviationThresholdN);
-        edtZigzagStraightDistanceK = view.findViewById(R.id.edtCfgZigzagStraightDistanceK);
-        edtZigzagOffsetDistanceL = view.findViewById(R.id.edtCfgZigzagOffsetDistanceL);
+        edtEndDistance = view.findViewById(R.id.edtCfgEndDistance);
+        edtMinStartPwmL = view.findViewById(R.id.edtCfgMinStartPwmL);
+        edtMinStartPwmR = view.findViewById(R.id.edtCfgMinStartPwmR);
         tvConfigNote = view.findViewById(R.id.tvConfigNote);
         btnUpdateConfig = view.findViewById(R.id.btnUpdateConfig);
 
@@ -116,67 +93,35 @@ public class SettingsFragment extends Fragment implements RobotSocketManager.Lis
             return;
         }
 
-        String ssid = edtSsid.getText().toString().trim();
-        String pass = edtPass.getText().toString().trim();
-
-        int goSpeed;
-        int turnSpeed;
-        float wheelRadius;
-        float rotateReverseThresholdDeg;
-        float rotateToleranceDeg;
-        int rotateMaxCorrections;
+        int basePwm;
+        float leftGain;
+        float rightGain;
         float wallDistance;
-        int sleepMinutes;
-        boolean pulseEnabled;
-        float pulseFreqHz;
-        float pulseDutyPercent;
-        float pulsePowerPercent;
-        float zigzagAngleOffsetM;
-        float zigzagDeviationThresholdN;
-        float zigzagStraightDistanceK;
-        float zigzagOffsetDistanceL;
+        float endDistance;
+        int minStartPwmL;
+        int minStartPwmR;
 
         try {
-            goSpeed = Integer.parseInt(edtGoSpeed.getText().toString().trim());
-            turnSpeed = Integer.parseInt(edtTurnSpeed.getText().toString().trim());
-            wheelRadius = Float.parseFloat(edtWheelRadius.getText().toString().trim());
-            rotateReverseThresholdDeg = Float.parseFloat(edtRotateReverseThreshold.getText().toString().trim());
-            rotateToleranceDeg = Float.parseFloat(edtRotateTolerance.getText().toString().trim());
-            rotateMaxCorrections = Integer.parseInt(edtRotateMaxCorrections.getText().toString().trim());
+            basePwm = Integer.parseInt(edtBasePwm.getText().toString().trim());
+            leftGain = Float.parseFloat(edtLeftGain.getText().toString().trim());
+            rightGain = Float.parseFloat(edtRightGain.getText().toString().trim());
             wallDistance = Float.parseFloat(edtWallDistance.getText().toString().trim());
-            sleepMinutes = Integer.parseInt(edtSleepMinutes.getText().toString().trim());
-            pulseEnabled = swPulseEnabled.isChecked();
-            pulseFreqHz = Float.parseFloat(edtPulseFreq.getText().toString().trim());
-            pulseDutyPercent = Float.parseFloat(edtPulseDuty.getText().toString().trim());
-            pulsePowerPercent = Float.parseFloat(edtPulsePower.getText().toString().trim());
-            zigzagAngleOffsetM = Float.parseFloat(edtZigzagAngleOffsetM.getText().toString().trim());
-            zigzagDeviationThresholdN = Float.parseFloat(edtZigzagDeviationThresholdN.getText().toString().trim());
-            zigzagStraightDistanceK = Float.parseFloat(edtZigzagStraightDistanceK.getText().toString().trim());
-            zigzagOffsetDistanceL = Float.parseFloat(edtZigzagOffsetDistanceL.getText().toString().trim());
+            endDistance = Float.parseFloat(edtEndDistance.getText().toString().trim());
+            minStartPwmL = Integer.parseInt(edtMinStartPwmL.getText().toString().trim());
+            minStartPwmR = Integer.parseInt(edtMinStartPwmR.getText().toString().trim());
         } catch (Exception e) {
             Toast.makeText(requireContext(), "Thông số cấu hình không hợp lệ", Toast.LENGTH_SHORT).show();
             return;
         }
 
         JsonObject config = new JsonObject();
-        config.addProperty("ssid", ssid);
-        config.addProperty("pass", pass);
-        config.addProperty("goSpeed", goSpeed);
-        config.addProperty("turnSpeed", turnSpeed);
-        config.addProperty("wheelRadiusCm", wheelRadius);
-        config.addProperty("rotateReverseThresholdDeg", rotateReverseThresholdDeg);
-        config.addProperty("rotateToleranceDeg", rotateToleranceDeg);
-        config.addProperty("rotateMaxCorrections", rotateMaxCorrections);
-        config.addProperty("wallStopDistanceCm", wallDistance);
-        config.addProperty("sleepMinutes", sleepMinutes);
-        config.addProperty("pulseEnabled", pulseEnabled);
-        config.addProperty("pulseFreqHz", pulseFreqHz);
-        config.addProperty("pulseDutyPercent", pulseDutyPercent);
-        config.addProperty("pulsePowerPercent", pulsePowerPercent);
-        config.addProperty("zigzagAngleOffsetM", zigzagAngleOffsetM);
-        config.addProperty("zigzagDeviationThresholdN", zigzagDeviationThresholdN);
-        config.addProperty("zigzagStraightDistanceK", zigzagStraightDistanceK);
-        config.addProperty("zigzagOffsetDistanceL", zigzagOffsetDistanceL);
+        config.addProperty("basePwm", basePwm);
+        config.addProperty("leftGain", leftGain);
+        config.addProperty("rightGain", rightGain);
+        config.addProperty("wallDistanceCm", wallDistance);
+        config.addProperty("endDistanceCm", endDistance);
+        config.addProperty("minStartPwmL", minStartPwmL);
+        config.addProperty("minStartPwmR", minStartPwmR);
 
         JsonObject payload = new JsonObject();
         payload.addProperty("type", "update_config");
@@ -202,31 +147,13 @@ public class SettingsFragment extends Fragment implements RobotSocketManager.Lis
             return;
         }
 
-        edtSsid.setText(readString(config, "ssid", ""));
-        edtPass.setText(readString(config, "pass", ""));
-        edtGoSpeed.setText(String.valueOf(readInt(config, "goSpeed", 60)));
-        edtTurnSpeed.setText(String.valueOf(readInt(config, "turnSpeed", 60)));
-        edtWheelRadius.setText(String.valueOf(readFloat(config, "wheelRadiusCm", 3.4f)));
-        edtRotateReverseThreshold.setText(String.valueOf(readFloat(config, "rotateReverseThresholdDeg", 8f)));
-        edtRotateTolerance.setText(String.valueOf(readFloat(config, "rotateToleranceDeg", 2f)));
-        edtRotateMaxCorrections.setText(String.valueOf(readInt(config, "rotateMaxCorrections", 2)));
-        edtWallDistance.setText(String.valueOf(readFloat(config, "wallStopDistanceCm", 20f)));
-        edtSleepMinutes.setText(String.valueOf(readInt(config, "sleepMinutes", 10)));
-        swPulseEnabled.setChecked(readBoolean(config, "pulseEnabled", true));
-        edtPulseFreq.setText(String.valueOf(readFloat(config, "pulseFreqHz", 12.5f)));
-        edtPulseDuty.setText(String.valueOf(readFloat(config, "pulseDutyPercent", 50f)));
-        edtPulsePower.setText(String.valueOf(readFloat(config, "pulsePowerPercent", 100f)));
-        edtZigzagAngleOffsetM.setText(String.valueOf(readFloat(config, "zigzagAngleOffsetM", 28f)));
-        edtZigzagDeviationThresholdN.setText(String.valueOf(readFloat(config, "zigzagDeviationThresholdN", 5f)));
-        edtZigzagStraightDistanceK.setText(String.valueOf(readFloat(config, "zigzagStraightDistanceK", 100f)));
-        edtZigzagOffsetDistanceL.setText(String.valueOf(readFloat(config, "zigzagOffsetDistanceL", 30f)));
-    }
-
-    private String readString(JsonObject obj, String key, String fallback) {
-        if (!obj.has(key) || obj.get(key).isJsonNull()) {
-            return fallback;
-        }
-        return obj.get(key).getAsString();
+        edtBasePwm.setText(String.valueOf(readInt(config, "basePwm", readInt(config, "goSpeed", 85))));
+        edtLeftGain.setText(String.valueOf(readFloat(config, "leftGain", 1.0f)));
+        edtRightGain.setText(String.valueOf(readFloat(config, "rightGain", 1.0f)));
+        edtWallDistance.setText(String.valueOf(readFloat(config, "wallDistanceCm", readFloat(config, "wallStopDistanceCm", 20f))));
+        edtEndDistance.setText(String.valueOf(readFloat(config, "endDistanceCm", 10f)));
+        edtMinStartPwmL.setText(String.valueOf(readInt(config, "minStartPwmL", 50)));
+        edtMinStartPwmR.setText(String.valueOf(readInt(config, "minStartPwmR", 50)));
     }
 
     private int readInt(JsonObject obj, String key, int fallback) {
@@ -248,18 +175,6 @@ public class SettingsFragment extends Fragment implements RobotSocketManager.Lis
 
         try {
             return obj.get(key).getAsFloat();
-        } catch (Exception e) {
-            return fallback;
-        }
-    }
-
-    private boolean readBoolean(JsonObject obj, String key, boolean fallback) {
-        if (!obj.has(key) || obj.get(key).isJsonNull()) {
-            return fallback;
-        }
-
-        try {
-            return obj.get(key).getAsBoolean();
         } catch (Exception e) {
             return fallback;
         }

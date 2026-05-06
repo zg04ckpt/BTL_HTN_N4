@@ -17,3 +17,8 @@ constexpr int MIN_START_PWM_L = 50; // PWM tối thiểu để bánh trái bắt
 constexpr int MIN_START_PWM_R = 50; // PWM tối thiểu để bánh phải bắt đầu quay
 constexpr unsigned long DIST_READ_INTERVAL_MS = 80; // Khoảng thời gian đọc khoảng cách (ms)
 // constexpr float DECLINATION_DEG = 0.0f; // Độ lệch từ trường tự nhiên của Trái Đất (độ)
+
+// TCRT5000 (line sensor)
+// ESP32 analogRead thường 0..4095. Tùy module/mặt sàn, bạn có thể cần chỉnh ngưỡng này sau khi test thực tế.
+constexpr int LINE_BLACK_THRESHOLD = 2000;
+constexpr bool LINE_SENSOR_BLACK_IS_LOW = true;

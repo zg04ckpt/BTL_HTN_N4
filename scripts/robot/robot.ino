@@ -3,6 +3,7 @@
 #include "src/modules/moving/moving.h"
 #include "src/hardwares/mpu6050.h"
 #include "src/modules/schedule/schedule.h"
+#include "src/modules/go_home/go_home.h"
 
 void setup() {
     Serial.begin(115200);
@@ -77,7 +78,12 @@ void loop() {
     // rotateByDeltaDegOneWheel(90.0f, false);
     // delay(1400);
 
-    run();
+    // if (homeSignalPresent()) {
+    //   Serial.println(F("[MAIN] Da bat duoc tin hieu home"));
+    // } else {
+    //   Serial.println(F("[MAIN] Khong"));
+    // }
+    run(); 
 
     delay(LOOP_DELAY_MS);
 }

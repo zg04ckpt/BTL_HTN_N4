@@ -14,6 +14,3 @@ constexpr int ECHO_PIN = 32;
 
 // TCRT5000
 constexpr int LINE_SENSOR_PIN = 36; 
-
-// IR Receiver
-constexpr int IR_RECV_PIN = 17;

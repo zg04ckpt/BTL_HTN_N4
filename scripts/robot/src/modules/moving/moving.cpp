@@ -150,7 +150,7 @@ RotateStatus rotateByDeltaDegOneWheel(float deltaDeg, bool isLeftRotate) {
         } else if (fabsf(err) >= 30.0f) {
             pwm = 90;
         }
-        // pwm = pwm * 0.7f;
+        pwm = pwm * ROTATE_GAIN;
 
         // Nếu là cần quay phải thì chỉ quay bánh trái, giữ bánh phải
         if (!isLeftRotate) {
@@ -170,11 +170,11 @@ RotateStatus rotateByDeltaDegOneWheel(float deltaDeg, bool isLeftRotate) {
 
             // Nếu err > 0 tức là chưa đạt đủ góc quay => bánh phải phải quay tiến
             if (err > 0.0f) {
-                setMotor(0, true, pwm * 0.5f, true); // Bánh phải tiển, bánh trái giữ 0
+                setMotor(0, true, pwm, true); // Bánh phải tiển, bánh trái giữ 0
             
             // Nếu err < 0 tức là đã quay quá góc quay => bánh phải phải quay lùi
             } else {
-                setMotor(0, true, pwm * 0.5f, false);  // Bánh phải lùi, bánh trái giữ 0
+                setMotor(0, true, pwm, false);  // Bánh phải lùi, bánh trái giữ 0
             }
         }
 
